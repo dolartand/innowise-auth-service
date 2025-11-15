@@ -52,7 +52,7 @@ public class FeignConfig {
                 case 404 -> new UserNotFoundException("User not found in User Service");
                 case 409 -> new UserAlreadyExistsException("User with this email already exists in User Service");
                 case 500 -> new ServiceUnavailableException("User Service encountered an error: " + response.reason());
-                default -> new ErrorDecoder().Default().decode(methodKey, response);
+                default -> new ErrorDecoder.Default().decode(methodKey, response);
             };
         };
     }
