@@ -1,5 +1,6 @@
 package com.innowise.authservice.client;
 
+import com.innowise.authservice.client.dto.CreateUserRequest;
 import com.innowise.authservice.client.dto.UserInfoDto;
 import com.innowise.authservice.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
