@@ -19,10 +19,10 @@ public class JwtProps {
     private String secret;
 
     @NotNull(message = "Access token is required")
-    private Long  accessTokenExp;
+    private Long accessTokenExpiration;
 
     @NotNull(message = "Refresh token is required")
-    private Long refreshTokenExp;
+    private Long refreshTokenExpiration;
 
     @NotBlank(message = "Issuer is required")
     private String issuer;

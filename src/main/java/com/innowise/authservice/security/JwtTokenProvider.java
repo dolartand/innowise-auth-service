@@ -26,7 +26,7 @@ public class JwtTokenProvider {
         log.debug("Generating access token for user {}, email {}, with role {}", userId, email,  role);
 
         Instant now = Instant.now();
-        Instant expiration = now.plusMillis(jwtProps.getAccessTokenExp());
+        Instant expiration = now.plusMillis(jwtProps.getAccessTokenExpiration());
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
@@ -51,7 +51,7 @@ public class JwtTokenProvider {
         log.debug("Generating refresh token for userId={}", userId);
 
         Instant now = Instant.now();
-        Instant expiration = now.plusMillis(jwtProps.getRefreshTokenExp());
+        Instant expiration = now.plusMillis(jwtProps.getRefreshTokenExpiration());
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
