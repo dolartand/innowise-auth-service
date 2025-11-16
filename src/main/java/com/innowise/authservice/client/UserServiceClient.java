@@ -21,4 +21,7 @@ public interface UserServiceClient {
 
     @PostMapping("/api/v1/users")
     UserInfoDto createUser(@RequestBody CreateUserRequest request);
+
+    @GetMapping("/api/v1/users/by-email/{email}")
+    UserInfoDto getUserByEmail(@PathVariable("email") String email);
 }
