@@ -96,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public AuthResponse login(LoginRequest loginRequest) {
         log.info("Login request for user with email: {}", loginRequest.email());
 
@@ -123,6 +123,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
 
         String refreshToken = jwtTokenProvider.generateRefreshToken(credential.getUserId());
+
+        saveRefreshToken(credential.getUserId(), refreshToken);
 
         log.info("Successfully login for user with email: {}", loginRequest.email());
 
@@ -223,6 +225,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void saveRefreshToken(Long userId, String token) {
+        refreshTokenRepository.deleteByUserId(userId);
+
         LocalDateTime expiresAt = LocalDateTime.now()
                 .plus(jwtProps.getRefreshTokenExpiration(), TimeUnit.MILLISECONDS.toChronoUnit());
 
