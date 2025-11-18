@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class FeignConfig {
 
-    @Value("${service.api.key:default-service-key}")
+    @Value("${service.api.key:service-key}")
     private String apiKey;
 
     @Bean
