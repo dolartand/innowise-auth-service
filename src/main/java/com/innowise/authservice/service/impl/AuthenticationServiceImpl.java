@@ -65,7 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         String passwordHash = passwordEncoder.encode(registerRequest.password());
-        Role role = userCredentialRepository.count() == 0 ? Role.ADMIN : Role.USER; // Первым пользователем по умолчанию является админ
+        Role role = userCredentialRepository.count() == 0 ? Role.ADMIN : Role.USER; // First user is ADMIN by default
 
         UserCredential credential = UserCredential.builder()
                 .userId(createdUser.id())
@@ -112,8 +112,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             if (!user.active()) {
                 throw new InvalidCredentialsException("User is not active");
             }
-        } catch (Exception e) {
+        } catch (InvalidCredentialsException e) {
             log.error("Failed to check users activity status: {}", e.getMessage());
+            throw new InvalidCredentialsException("Failed to validate user credentials");
         }
 
         String accessToken = jwtTokenProvider.generateAccessToken(
