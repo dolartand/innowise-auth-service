@@ -60,18 +60,18 @@ public class FeignConfig {
     @Bean
     public Request.Options requestOptions() {
         return new Request.Options(
-                5000, TimeUnit.MILLISECONDS, // установить соединение
-                10000, TimeUnit.MILLISECONDS, // ожидаение ответа
-                true // обрабатывать редирект статусы
+                5000, TimeUnit.MILLISECONDS,
+                10000, TimeUnit.MILLISECONDS,
+                true
         );
     }
 
     @Bean
     public Retryer retryer() {
         return new Retryer.Default(
-                100,    // начальная задержка в мс
-                1000,   // макс задержка в мс
-                3       // макс попыток
+                100,
+                1000,
+                3
         );
     }
 }
