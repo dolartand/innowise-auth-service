@@ -20,9 +20,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -141,7 +141,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
         @DisplayName("should return 400 when request data is invalid")
         void shouldReturn400_WhenRequestDataInvalid() throws Exception {
             RegisterRequest request = RegisterRequest.builder()
-                    .name("Iv") // Слишком короткое имя
+                    .name("Iv")
                     .surname("Ivanov")
                     .birthDate(LocalDate.now().plusDays(1))
                     .email("invalid-email")
@@ -168,7 +168,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
             userCredentialRepository.save(credential);
 
             UserInfoDto userInfoDto = createUserInfoDto(1L, "ivan@example.com");
-            when(userServiceClient.getUserById(anyLong())).thenReturn(userInfoDto);
+            when(userServiceClient.getUserByEmail(anyString())).thenReturn(userInfoDto);
 
             LoginRequest request = LoginRequest.builder()
                     .email("ivan@example.com")
@@ -240,7 +240,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
                     .email("ivan@example.com")
                     .active(false)
                     .build();
-            when(userServiceClient.getUserById(anyLong())).thenReturn(inactiveUser);
+            when(userServiceClient.getUserByEmail(anyString())).thenReturn(inactiveUser);
 
             LoginRequest request = LoginRequest.builder()
                     .email("ivan@example.com")
@@ -271,7 +271,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
             refreshTokenRepository.save(oldToken);
 
             UserInfoDto userInfoDto = createUserInfoDto(1L, "ivan@example.com");
-            when(userServiceClient.getUserById(anyLong())).thenReturn(userInfoDto);
+            when(userServiceClient.getUserByEmail(anyString())).thenReturn(userInfoDto);
 
             LoginRequest request = LoginRequest.builder()
                     .email("ivan@example.com")
