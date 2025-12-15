@@ -149,7 +149,7 @@ public class AuthenticationServiceImplTest {
 
             when(userCredentialRepository.findByEmail(request.email())).thenReturn(Optional.of(credential));
             when(passwordEncoder.matches(request.password(), credential.getPasswordHash())).thenReturn(true);
-            when(userServiceClient.getUserById(credential.getUserId())).thenReturn(userInfo);
+            when(userServiceClient.getUserByEmail(credential.getEmail())).thenReturn(userInfo);
             when(jwtTokenProvider.generateAccessToken(anyLong(), anyString(), any(Role.class)))
                     .thenReturn("access_token");
             when(jwtTokenProvider.generateRefreshToken(anyLong())).thenReturn("refresh_token");
@@ -216,7 +216,7 @@ public class AuthenticationServiceImplTest {
 
             when(userCredentialRepository.findByEmail(request.email())).thenReturn(Optional.of(credential));
             when(passwordEncoder.matches(request.password(), credential.getPasswordHash())).thenReturn(true);
-            when(userServiceClient.getUserById(credential.getUserId())).thenReturn(inactiveUser);
+            when(userServiceClient.getUserByEmail(credential.getEmail())).thenReturn(inactiveUser);
 
             assertThatThrownBy(() -> authenticationService.login(request))
                     .isInstanceOf(InvalidCredentialsException.class)
