@@ -4,10 +4,8 @@ import com.innowise.authservice.client.dto.CreateUserRequest;
 import com.innowise.authservice.client.dto.UserInfoDto;
 import com.innowise.authservice.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
         name = "user-service",
@@ -16,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 )
 public interface UserServiceClient {
 
-    @GetMapping("/api/v1/users/{id}")
-    UserInfoDto getUserById(@PathVariable("id") Long id);
-
     @PostMapping("/api/v1/users")
     UserInfoDto createUser(@RequestBody CreateUserRequest request);
 
     @GetMapping("/api/v1/users/by-email/{email}")
     UserInfoDto getUserByEmail(@PathVariable("email") String email);
+
+    @DeleteMapping("/api/v1/users/{id}")
+    ResponseEntity<Void> deleteUser(@PathVariable("id") Long id);
 }

@@ -74,25 +74,36 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(role)
                 .build();
 
-        userCredentialRepository.save(credential);
+        try {
+            userCredentialRepository.save(credential);
 
-        String accessToken = jwtTokenProvider.generateAccessToken(
-                createdUser.id(), createdUser.email(), role
-        );
-        String refreshToken = jwtTokenProvider.generateRefreshToken(createdUser.id());
+            String accessToken = jwtTokenProvider.generateAccessToken(
+                    createdUser.id(), createdUser.email(), role
+            );
+            String refreshToken = jwtTokenProvider.generateRefreshToken(createdUser.id());
 
-        saveRefreshToken(createdUser.id(), refreshToken);
+            saveRefreshToken(createdUser.id(), refreshToken);
 
-        log.info("Successfully register user with email: {}", createdUser.email());
+            log.info("Successfully register user with email: {}", createdUser.email());
 
-        return new AuthResponse(
-                accessToken,
-                refreshToken,
-                createdUser.id(),
-                registerRequest.email(),
-                role.name(),
-                jwtProps.getAccessTokenExpiration()
-        );
+            return new AuthResponse(
+                    accessToken,
+                    refreshToken,
+                    createdUser.id(),
+                    registerRequest.email(),
+                    role.name(),
+                    jwtProps.getAccessTokenExpiration()
+            );
+        } catch (Exception ex) {
+            log.error("Failed to save credentials, rollback user creation: {}", ex.getMessage());
+            try {
+                userServiceClient.deleteUser(createdUser.id());
+            } catch (Exception rollbackEx) {
+                log.error("Failed to rollback user creation: {}", ex.getMessage());
+                throw rollbackEx;
+            }
+            throw ex;
+        }
     }
 
     @Override
@@ -108,7 +119,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         try {
-            UserInfoDto user = userServiceClient.getUserById(credential.getUserId());
+            UserInfoDto user = userServiceClient.getUserByEmail(credential.getEmail());
             if (!user.active()) {
                 throw new InvalidCredentialsException("User is not active");
             }
