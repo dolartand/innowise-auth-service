@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 )
 public interface UserServiceClient {
 
-    @PostMapping("/api/v1/users")
+    @PostMapping("/internal/users")
     UserInfoDto createUser(@RequestBody CreateUserRequest request);
 
-    @GetMapping("/api/v1/users/by-email/{email}")
-    UserInfoDto getUserByEmail(@PathVariable("email") String email);
+    @GetMapping("/internal/users/by-email")
+    UserInfoDto getUserByEmail(@RequestParam("email") String email);
 
-    @DeleteMapping("/api/v1/users/{id}")
+    @DeleteMapping("/internal/users/{id}")
     ResponseEntity<Void> deleteUser(@PathVariable("id") Long id);
 }
